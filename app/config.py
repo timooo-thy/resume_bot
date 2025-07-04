@@ -3,6 +3,9 @@ from functools import lru_cache
 
 
 class Settings(BaseSettings):
+    """
+    Application settings class that loads configuration from environment variables.
+    """
     OPENAI_API_KEY: str
     model_config = SettingsConfigDict(env_file=".env")
 

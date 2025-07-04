@@ -36,5 +36,12 @@ jobs:
       - name: Build Docker image
         run: docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ github.sha }} .
 
+      - name: Health Check
+        run: |
+          docker run --rm -d --name resume_bot ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ github.sha }}
+          sleep 10
+          curl -f http://localhost:8000/health || exit 1
+          docker stop resume_bot
+
       - name: Push Docker image
         run: docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ github.sha }}

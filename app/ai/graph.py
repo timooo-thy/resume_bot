@@ -7,6 +7,9 @@ from langgraph.graph.state import CompiledStateGraph
 
 
 class AgentState(TypedDict):
+    """
+    Represents the state of the agent in the graph.
+    """
     messages: Annotated[list[BaseMessage], add_messages]
     retries: int
     max_retries: int
@@ -17,12 +20,24 @@ class AgentGraph:
     def compile(self) -> CompiledStateGraph[AgentState, AgentState, AgentState]:
         """
         Compile the agent graph.
+
+        Returns:
+            CompiledStateGraph: The compiled state graph for the agent.
         """
         return StateGraph(AgentState).add_node(
             self.agent_node).add_edge(
             START, "agent_node").compile()
 
     def agent_node(self, state: AgentState) -> Dict:
+        """
+        The agent node function that processes the last message and generates a response.
+
+        Args:
+            state (AgentState): The current state of the agent.
+
+        Returns:
+            Dict: A dictionary containing the next state of the agent.
+        """
 
         if state["retries"] >= state["max_retries"]:
             return {}
