@@ -57,4 +57,4 @@ async def health_check() -> dict[str, str | float]:
     Returns:
         dict: A dictionary containing the status and current timestamp.
     """
-    return {"status": "healthy", "timestamp": time()}
+    return {"status": "healthy", "timestamp": time(), "version": "1.0.0"}
