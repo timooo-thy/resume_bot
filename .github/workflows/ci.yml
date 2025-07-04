@@ -9,7 +9,24 @@ on:
       - main
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      docker: ${{ steps.filter.outputs.docker }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            docker:
+              - 'Dockerfile'
+              - 'app/**'
+              - 'requirements.txt'
+
   build:
+    needs: changes
+    if: needs.changes.outputs.docker == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +36,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: "3.13.0"
+          python-version: "3.13"
+
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install dependencies
         run: |
@@ -38,7 +63,7 @@ jobs:
 
       - name: Health Check
         run: |
-          docker run --rm -d --name resume_bot ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ github.sha }}
+          docker run --rm -d -p 8000:8000 --name resume_bot ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ github.sha }}
           sleep 10
           curl -f http://localhost:8000/health || exit 1
           docker stop resume_bot
