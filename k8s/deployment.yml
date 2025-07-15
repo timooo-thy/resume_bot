@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resume-bot-deployment
+  labels:
+    app: resume-bot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: resume-bot
+  template:
+    metadata:
+      labels:
+        app: resume-bot
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: resume-bot
+          image: ghcr.io/timooo-thy/timooo-thy/resume_bot:c1d66836a71a95f5b333f34236f88537da87bc10
+          ports:
+            - containerPort: 8000
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: OPENAI_API_KEY
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"

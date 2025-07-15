@@ -1,4 +1,4 @@
-from typing import TypedDict, Annotated, Dict
+from typing import TypedDict, Annotated
 from langgraph.graph.message import add_messages
 from langchain_openai import ChatOpenAI
 from langchain.schema import BaseMessage
@@ -28,7 +28,7 @@ class AgentGraph:
             self.agent_node).add_edge(
             START, "agent_node").compile()
 
-    def agent_node(self, state: AgentState) -> Dict:
+    def agent_node(self, state: AgentState) -> dict:
         """
         The agent node function that processes the last message and generates a response.
 
