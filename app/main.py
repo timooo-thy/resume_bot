@@ -2,9 +2,9 @@ from fastapi import FastAPI, Request
 from time import time
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from services.httpx_service import HTTPXService
+from .services.httpx_service import HTTPXService
 import httpx
-from routers import graph_router
+from .routers import graph_router
 
 
 @asynccontextmanager

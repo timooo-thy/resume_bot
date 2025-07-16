@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends
-from config import get_settings
+from ..config import get_settings
 from langchain_openai import ChatOpenAI
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from ai.graph import AgentGraph
+from ..ai.graph import AgentGraph
 from langchain.schema import HumanMessage
 
 router = APIRouter(prefix="/api", tags=["Conversation"])
